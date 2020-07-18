@@ -6,23 +6,34 @@ namespace UnitTests.Lib
 
     public class Employee : People
     {
-        public double Salary { get; private set; }
+        public Guid Id { get; set; }
+        public decimal Salary { get; private set; }
         public ProfessionalLevel ProfessionalLevel { get; private set; }
         public IList<string> Skills { get; private set; }
 
-        public Employee(string name, double surname)
+
+        public Employee(string name, string surname, decimal salary, string email, DateTime bithDate)
         {
-            Name = string.IsNullOrEmpty(name) ? "NoName" : name;
-            SetSalary(surname);
+            Id = Guid.NewGuid();
+            Name = name;
+            Surname = surname;
+            Email = email;
+            BirthDate = bithDate;
+
+            SetSalary(salary);
             SetSkills();
         }
 
         public bool IsValid()
         {
-            return true;
+            DateTime zeroTime = new DateTime(1, 1, 1);
+            var diff = DateTime.Now - BirthDate;
+            int years = (zeroTime + diff).Year - 1;
+
+            return years >= 16;
         }
 
-        public void SetSalary(double salario)
+        public void SetSalary(decimal salario)
         {
             if(salario < 500) throw new Exception("Salary less than allowed");
 
@@ -36,7 +47,6 @@ namespace UnitTests.Lib
         {
             var habilidadesBasicas = new List<string>()
             {
-
                 "Programming logic",
                 "OOP"
             };
@@ -58,9 +68,9 @@ namespace UnitTests.Lib
 
     public class EmployeeFactory
     {
-        public static Employee Create(string name, double salary)
+        public static Employee Create(string name, string surname, decimal salary, string email, DateTime bithDate)
         {
-            return new Employee(name, salary);
+            return new Employee(name, surname, salary, email, bithDate);
         }
     }
 }

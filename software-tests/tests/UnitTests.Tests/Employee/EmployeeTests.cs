@@ -15,7 +15,7 @@ namespace UnitTests.Tests
 
         [Fact]
         [Trait("Category", "Employee")]
-        public void Employee_NewEmployee_MustBeValid()
+        public void Employee_NewEmployee_IsValid()
         {
             // Arrange
             var employee = _employeeTestFixture.CreateValidEmployee();
@@ -25,6 +25,21 @@ namespace UnitTests.Tests
 
             // Assert
             Assert.True(isValid);
+        }
+
+
+        [Fact]
+        [Trait("Category", "Employee")]
+        public void Employee_NewEmployee_IsInvalid()
+        {
+            // Arrange
+            var employee = _employeeTestFixture.CreateInvalidEmployee();
+
+            // Act
+            var isValid = employee.IsValid();
+
+            // Assert
+            Assert.False(isValid);
         }
     }
 }
