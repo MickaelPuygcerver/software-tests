@@ -10,6 +10,7 @@ namespace UnitTests.Lib
         public decimal Salary { get; private set; }
         public ProfessionalLevel ProfessionalLevel { get; private set; }
         public IList<string> Skills { get; private set; }
+        public HealthPlan HealthPlan { get; private set; }
 
 
         public Employee(string name, string surname, decimal salary, string email, DateTime bithDate)
@@ -41,6 +42,11 @@ namespace UnitTests.Lib
             if (salario < 2000) ProfessionalLevel = ProfessionalLevel.Junior;
             else if (salario >= 2000 && salario < 8000) ProfessionalLevel = ProfessionalLevel.MidLevel;
             else if (salario >= 8000) ProfessionalLevel = ProfessionalLevel.Senior;
+        }
+
+        public void SetHelthPlan(HealthPlan healthPlan)
+        {
+            HealthPlan = healthPlan;
         }
 
         private void SetSkills()

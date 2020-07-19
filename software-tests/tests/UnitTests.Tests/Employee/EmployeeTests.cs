@@ -1,4 +1,9 @@
-﻿using Xunit;
+﻿using MediatR;
+using Moq;
+using System.Threading;
+using UnitTests.Lib.Repository;
+using UnitTests.Lib.Services;
+using Xunit;
 
 namespace UnitTests.Tests
 {
@@ -27,7 +32,6 @@ namespace UnitTests.Tests
             Assert.True(isValid);
         }
 
-
         [Fact]
         [Trait("Category", "Employee")]
         public void Employee_NewEmployee_IsInvalid()
@@ -40,6 +44,34 @@ namespace UnitTests.Tests
 
             // Assert
             Assert.False(isValid);
+        }
+
+        [Fact]
+        [Trait("Category", "Employee")]
+        public void Employee_SetHelthPlan_Success()
+        {
+            #region Arrange
+            var employee = _employeeTestFixture.CreateValidEmployee();
+
+            /* Mocking the objects 
+            Interface is a more real way to get closer to reality than implementation */
+            var employeeRepository = new Mock<IEmployeeRepository>();
+            var mediator = new Mock<IMediator>();
+
+            // Using mock objects to instantiate a service
+            var benefitsService = new BenefitsService(employeeRepository.Object, mediator.Object);
+            #endregion
+
+            // Act
+            benefitsService.ChooseHealthPlan(employee, Lib.HealthPlan.Plan123);
+
+            #region  Assert
+            // Check if method update from EmployeeRepository is called just one time
+            employeeRepository.Verify(method => method.Update(employee), times: Times.Once);
+            // Check if mediator throw once any notification inheriting of INotification 
+            mediator.Verify(method =>
+                method.Publish(It.IsAny<INotification>(), CancellationToken.None), times: Times.Once);
+            #endregion
         }
     }
 }
